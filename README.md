@@ -1,18 +1,25 @@
-# React + Vite
+# React.js Recipe Book App 🍲
 
+## Overview
 
-Added with npm:
-- react-dom-router
-- react-icons
-- framer-motion  
-- styled-components
-- react-splide
--
+This web application is a Recipe Book built with React.js. It allows users to explore a diverse collection of recipes fetched from an external API, providing a platform to discover cooking ideas.
 
+## Features
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Browse through a variety of recipes with detailed information.
+- Search for specific recipes based on ingredients, cuisine, or dietary preferences.
+- Responsive design for an optimal viewing experience on different devices.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Prerequisites
+
+- Node.js and npm (Node Package Manager) installed on your machine.
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/OzturkVedat/recipe-book-app
+   cd recipe-book-app
