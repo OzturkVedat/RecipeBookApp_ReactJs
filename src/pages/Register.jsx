@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup"; // Import Yup for validation
+
 import {
   faInfoCircle,
   faCheck,
@@ -16,225 +18,173 @@ import {
   PasswordField,
 } from "../components/StyledComponents.jsx";
 
-const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 const registerURL = "/register";
 
 function Register() {
-  const userRef = useRef();
-  const errRef = useRef(); // for announcing error
-
-  const [user, setUser] = useState("");
-  const [validName, setValidName] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
-
-  const [pwd, setPwd] = useState(""); // useState hooks for form fields
-  const [validPwd, setValidPwd] = useState(false);
-  const [pwdFocus, setPwdFocus] = useState(false);
-
-  const [matchPwd, setMatchPwd] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showMatchPassword, setShowMatchPassword] = useState(false);
-
-  const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState("");
-
-  useEffect(() => {
-    userRef.current.focus(); // set the focus to userName when the Form component loads
-  }, []);
-
-  useEffect(() => {
-    setValidName(usernameRegex.test(user)); // boolean check
-  }, [user]);
-
-  useEffect(() => {
-    setValidPwd(passwordRegex.test(pwd));
-    const match = pwd === matchPwd;
-    setValidMatch(match);
-  }, [pwd, matchPwd]);
-
-  const togglePasswordVisibility = () => {
-    // for toggling the password visibility
-    setShowPassword(!showPassword);
-  };
-
-  const toggleMatchPasswordVisibility = () => {
-    setShowMatchPassword(!showMatchPassword);
-  };
-
-  useEffect(() => {
-    setErrMsg("");
-  }, [user, pwd, matchPwd]); // for cleaning out the error message when the input fields change
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const v1 = usernameRegex.test(user); // in case the button is enabled with js hack
-    const v2 = passwordRegex.test(pwd);
-    if (!v1 || !v2) {
-      setErrMsg("Invalid entry");
-      return;
-    }
-    try {
-      const response = await axios.post(
-        registerURL,
-        JSON.stringify({ user, pwd }),
-        {
+  const formik = useFormik({
+    initialValues: {
+      username: "", // declaring formik inputs
+      password: "",
+      confirmPwd: "",
+    },
+    validationSchema: Yup.object({
+      // validation using yup and RegEx
+      username: Yup.string()
+        .matches(
+          /^[a-zA-Z0-9_]{4,20}$/,
+          "Username must be 4 to 20 characters long and contain only alphanumeric characters and underscores."
+        )
+        .required("Username is required"),
+      password: Yup.string()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+          "Password must be at least 8 characters long and contain at least one digit and one uppercase letter."
+        )
+        .required("Password is required"),
+      confirmPwd: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Confirm Password is required"),
+    }),
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
+      try {
+        const response = await axios.post(registerURL, values, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
+        });
+        console.log(response.data);
+        setSubmitting(false);
+        //  success message  //
+      } catch (err) {
+        if (!err?.response) {
+          setErrors({ general: "No Server Response" });
+        } else if (err.response?.status === 409) {
+          setErrors({ username: "Username Taken" });
+        } else {
+          setErrors({ general: "Registration Failed" });
         }
-      );
-      console.log(response.data);
-      setSuccess(true);
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 409) setErrMsg("Username Taken");
-      else setErrMsg("Registration Failed");
-
-      errRef.current.focus();
-    }
-  };
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
-    <>
-      {success ? (
-        <RegisterSection>
-          <h1>Success!</h1>
-          <p>
-            <a href="#">Sign In</a>
+    <RegisterSection>
+      <h1>Register</h1>
+      <RegisterForm onSubmit={formik.handleSubmit}>
+        {formik.errors.general && (
+          <p className="errmsg" aria-live="assertive">
+            {formik.errors.general}
           </p>
-        </RegisterSection>
-      ) : (
-        <RegisterSection>
-          <p
-            ref={errRef}
-            className={errMsg ? "errmsg" : "offscreen"}
-            aria-live="assertive"
+        )}
+        <label htmlFor="username">
+          Username:
+          <span
+            className={
+              formik.touched.username && formik.errors.username
+                ? "invalid"
+                : "hide"
+            }
           >
-            {errMsg}
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+          <span
+            className={
+              formik.touched.username && !formik.errors.username
+                ? "valid"
+                : "hide"
+            }
+          >
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+        </label>
+        <input
+          type="text"
+          id="username"
+          {...formik.getFieldProps("username")}
+        />
+        {formik.touched.username && formik.errors.username && (
+          <p className="instructions">
+            <FontAwesomeIcon icon={faInfoCircle} />
+            {formik.errors.username}
           </p>
-          <h1>Register</h1>
-          <RegisterForm onSubmit={handleSubmit}>
-            <label htmlFor="username">
-              Username:
-              <span className={validName ? "valid" : "hide"}>
-                <fontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validName || !user ? "hide" : "invalid"}>
-                <fontAwesomeIcon icon={faTimes} />
-              </span>
-            </label>
-            <input
-              type="text"
-              id="username"
-              ref={userRef}
-              autoComplete="on"
-              onChange={(e) => setUser(e.target.value)}
-              required
-              aria-invalid={validName ? "false" : "true"}
-              aria-describedby="uidnote"
-              onFocus={() => setUserFocus(true)}
-              onBlur={() => setUserFocus(false)}
-            />
-            <p
-              id="uidnote"
-              className={
-                userFocus && user && !validName ? "instructions" : "offscreen"
-              }
-            >
-              <fontAwesomeIcon icon={faInfoCircle} />
-              4 to 20 characters. <br />
-              Alphanumeric characters and underscores allowed.
-            </p>
-            <label htmlFor="password">
-              Password:
-              <span className={validName ? "valid" : "hide"}>
-                <fontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validPwd || !pwd ? "hide" : "invalid"}>
-                <fontAwesomeIcon icon={faTimes} />
-              </span>
-            </label>
-            <PasswordField>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                onChange={(e) => setPwd(e.target.value)}
-                required
-                aria-invalid={validPwd ? "false" : "true"}
-                aria-describedby="pwdnote"
-                onFocus={() => setPwdFocus(true)}
-                onBlur={() => setPwdFocus(false)}
-              />
-              <button type="button" onClick={togglePasswordVisibility}>
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-              </button>
-              <p
-                id="pwdnote"
-                className={pwdFocus && !validPwd ? "instructions" : "offscreen"}
-              >
-                <fontAwesomeIcon icon={faInfoCircle} />
-                At least 8 characters. <br />
-                At least one digit and one uppercase character.
-              </p>
-            </PasswordField>
-            <label htmlFor="confirm_pwd">
-              Confirm Password:
-              <span className={validMatch && (matchPwd ? "valid" : "hide")}>
-                <fontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validMatch || !matchPwd ? "hide" : "invalid"}>
-                <fontAwesomeIcon icon={faTimes} />
-              </span>
-            </label>
-            <PasswordField>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="confirm_pwd"
-                onChange={(e) => setMatchPwd(e.target.value)}
-                required
-                aria-invalid={validMatch ? "false" : "true"}
-                aria-describedby="confirmnote"
-                onFocus={() => setMatchFocus(true)}
-                onBlur={() => setMatchFocus(false)}
-              />
-              <button type="button" onClick={toggleMatchPasswordVisibility}>
-                <FontAwesomeIcon
-                  icon={showMatchPassword ? faEyeSlash : faEye}
-                />
-              </button>
-              <p
-                id="confirmnote"
-                className={
-                  matchFocus && !validMatch ? "instructions" : "offscreen"
-                }
-              >
-                <fontAwesomeIcon icon={faInfoCircle} />
-                Passwords must match.
-              </p>
-            </PasswordField>
-            <button
-              disabled={
-                !validName || !validPwd || !validMatch ? "true" : "false"
-              }
-            >
-              Sign Up
-            </button>
-          </RegisterForm>
-          <p>
-            Already registered?
-            <br />
-            <span className="line">
-              <Link to="/login">Sign In</Link>
-            </span>
+        )}
+        <label htmlFor="password">
+          Password:
+          <span
+            className={
+              formik.touched.password && formik.errors.password
+                ? "invalid"
+                : "hide"
+            }
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+          <span
+            className={
+              formik.touched.password && !formik.errors.password
+                ? "valid"
+                : "hide"
+            }
+          >
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+        </label>
+        <input
+          type="password"
+          id="password"
+          {...formik.getFieldProps("password")}
+        />
+        {formik.touched.password && formik.errors.password && (
+          <p className="instructions">
+            <FontAwesomeIcon icon={faInfoCircle} />
+            {formik.errors.password}
           </p>
-        </RegisterSection>
-      )}
-    </>
+        )}
+
+        <label htmlFor="confirmPassword">
+          Confirm Password:
+          <span
+            className={
+              formik.touched.confirmPwd && formik.errors.confirmPwd
+                ? "invalid"
+                : "hide"
+            }
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+          <span
+            className={
+              formik.touched.confirmPwd && !formik.errors.confirmPwd
+                ? "valid"
+                : "hide"
+            }
+          >
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+        </label>
+        <input
+          type="password"
+          id="confirmPassword"
+          {...formik.getFieldProps("confirmPwd")}
+        />
+        {formik.touched.confirmPwd && formik.errors.confirmPwd && (
+          <p className="instructions">
+            <FontAwesomeIcon icon={faInfoCircle} />
+            {formik.errors.confirmPwd}
+          </p>
+        )}
+        <button type="submit" disabled={formik.isSubmitting}>
+          Sign Up
+        </button>
+      </RegisterForm>
+      <p>
+        Already registered?
+        <br />
+        <span className="line">
+          <Link to="/login">Sign In</Link>
+        </span>
+      </p>
+    </RegisterSection>
   );
 }
 
