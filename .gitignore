@@ -22,6 +22,9 @@ dist-ssr/
 .idea/
 .DS_Store
 
+# Ignore node_modules directory
+node_modules/
+
 # Visual Studio files
 *.suo
 *.ntvs*
