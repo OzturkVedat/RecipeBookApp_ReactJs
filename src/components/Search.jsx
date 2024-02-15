@@ -28,6 +28,7 @@ function Search() {
         onChange={(e) => setInput(e.target.value)}
         value={input}
         type="text"
+        placeholder="Find delicious recipes..."
       />
     </FormStyle>
   );

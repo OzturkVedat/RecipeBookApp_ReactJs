@@ -9,15 +9,15 @@ import { GiKnifeFork } from "react-icons/gi";
 function App() {
   return (
     <BrowserRouter>
-      <Nav>
-        <GiKnifeFork />
-        <Logo to={"/"}>deliciousss</Logo>
-        <div>
-          <SignButton to="/register/">Sign Up</SignButton>
-          <SignButton to="/login/">Log In</SignButton>
-        </div>
-      </Nav>
-      <Search />
+        <Nav>
+          <GiKnifeFork />
+          <Logo to={"/"}>Savory</Logo>
+          <div>
+            <SignButton to="/register/">Sign Up</SignButton>
+            <SignButton to="/login/">Log In</SignButton>
+          </div>
+        </Nav>
+        <Search />
       <Category />
       <Pages />
     </BrowserRouter>
@@ -33,7 +33,6 @@ const Logo = styled(Link)`
 const Nav = styled.div`
   padding: 5%;
   position: relative;
-  margin-bottom: 5%;
   svg {
     font-size: 4rem;
   }
