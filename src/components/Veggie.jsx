@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-import RecipeSplide from './RecipeSplide.jsx';
-import { fetchRecipes } from '../services/apiService.jsx';
+import RecipeSplide from "./RecipeSplide.jsx";
+import { fetchRecipes } from "../services/apiService.jsx";
 
 const Veggie = () => {
   const fetchData = async () => {
@@ -18,7 +18,12 @@ const Veggie = () => {
     fetchData().then((data) => setVeggies(data));
   }, []);
 
-  return <RecipeSplide recipes={veggies} />;
+  return (
+    <>
+      <h3>Vegetarian Dishes:</h3>
+      <RecipeSplide recipes={veggies} />
+    </>
+  );
 };
 
 export default Veggie;

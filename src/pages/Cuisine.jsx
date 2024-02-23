@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { fetchData } from "../services/apiService.jsx";
 import { Link } from "react-router-dom";
 
 import { Grid, CuisineCard } from "../components/StyledComponents.jsx";
 
 function Cuisine() {
   const [cuisine, setCuisine] = useState([]);
-  let params = useParams(); // for fetching the corresponding cuisine (parameter we got from routing)
+  let params = useParams(); // for fetching the corresponding cuisine
 
   const getCuisine = async (cuisineName) => {
     try {
@@ -16,12 +16,12 @@ function Cuisine() {
       if (storedData) {
         setCuisine(JSON.parse(storedData));
       } else {
-        const response = await axios.get(
+        const response = fetchData(
           `https://api.spoonacular.com/recipes/complexSearch?apiKey=${
             import.meta.env.VITE_REACT_APP_API_KEY
           }&number=12&cuisine=${cuisineName}`
         );
-        const recipes = response.data.results;
+        const recipes = response.results;
         setCuisine(recipes);
 
         localStorage.setItem(`cuisine_${cuisineName}`, JSON.stringify(recipes)); // Cache data in localStorage

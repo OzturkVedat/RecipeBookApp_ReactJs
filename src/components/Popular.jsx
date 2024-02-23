@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-import RecipeSplide from './RecipeSplide.jsx';
-import { fetchRecipes } from '../services/apiService.jsx';
+import RecipeSplide from "./RecipeSplide.jsx";
+import { fetchRecipes } from "../services/apiService.jsx";
 
 const Popular = () => {
   const fetchData = async () => {
@@ -18,7 +18,12 @@ const Popular = () => {
     fetchData().then((data) => setPopulars(data));
   }, []);
 
-  return <RecipeSplide recipes={populars} />;
+  return (
+    <>
+      <h3>Popular Recipes:</h3>
+      <RecipeSplide recipes={populars} />
+    </>
+  );
 };
 
 export default Popular;
