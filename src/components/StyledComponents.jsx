@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 
 export const FormStyle = styled.form`
-  margin: 0% 1% 0% 30%;
+  margin: 2% 1% 0% 30%;
   position: relative;
   max-width: 100%;
   input {
@@ -65,8 +65,12 @@ export const SplideCard = styled.div`
 `;
 export const Grid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 1.5rem;
+  margin: 0 4%;
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 export const CuisineCard = styled.div`
   img {
@@ -163,11 +167,11 @@ export const RegisterForm = styled.form`
 export const PasswordField = styled.div`
   display: grid;
   grid-template-columns: 97% 3%;
-  max-width:90%;
+  max-width: 90%;
   button {
     font-size: 1rem;
     background-color: white;
-    margin-left:5%;
+    margin-left: 5%;
     color: #313131;
     border: none;
   }

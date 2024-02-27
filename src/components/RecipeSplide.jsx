@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
+import ImageFiller from 'react-image-filler';
 
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
@@ -51,10 +52,7 @@ const RecipeSplide = ({ recipes }) => {
                 {recipe.image ? (
                   <img src={recipe.image} alt={recipe.title} />
                 ) : (
-                  <img
-                    src={"/food-placeholder.jpg"}
-                    alt={"placeholder food img"}
-                  />
+                  <ImageFiller width={200} height={200} text="Loading.." /> 
                 )}
                 <div className="text-container">
                   <p>{recipe.title}</p>
