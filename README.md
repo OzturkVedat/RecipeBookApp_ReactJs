@@ -11,7 +11,7 @@ This web application is a Recipe Book built with React.js. It allows users to ex
 - Responsive design for an optimal viewing experience on different devices.
 
 
-## Setting up
+## Setting Up
 
 ### Prerequisites
 
