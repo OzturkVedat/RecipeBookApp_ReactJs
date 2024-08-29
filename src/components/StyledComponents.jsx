@@ -30,13 +30,17 @@ export const SplideWrapper = styled.div`
 `;
 
 export const SplideCard = styled.div`
-  max-height: 18rem;
-  max-width: 14rem;
+  max-height: 20rem;
+  max-width: 16rem;
   border-radius: 1rem;
   overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
+  
+  a {
+  text-decoration: none;
+  }
 
   img {
     max-width: 100%;
