@@ -43,7 +43,7 @@ Make sure you have Node.js and npm installed on your machine. Registration to Sp
 
 Explore the Recipe Book App to discover new dishes and search for recipes!
 
-![Screenshot](.public/recipe-book.png)
+![Screenshot](./public/recipe-book.png)
 
 ## Acknowledgements
 
