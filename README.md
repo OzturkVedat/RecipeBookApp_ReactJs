@@ -39,12 +39,7 @@ Make sure you have Node.js and npm installed on your machine. Registration to Sp
 
 5. Open the app in your browser at `http://localhost:5173/Recipe_Book_App/`.
 
-## Usage
-
-Explore the Recipe Book App to discover new dishes and search for recipes!
+## UI
 
 ![Screenshot](./public/recipe-book.png)
 
-## Acknowledgements
-
-- Thanks to Spoonacular API for providing the recipe data API.
