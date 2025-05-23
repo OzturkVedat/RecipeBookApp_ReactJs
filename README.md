@@ -1,8 +1,8 @@
-# React.js Recipe Book App 🍲
+# React.js Recipe Book App
 
 ## Overview
 
-This web application is a Recipe Book web app built with React.js. It allows users to explore a collection of recipes fetched from an external API, providing a platform to discover cooking ideas.
+This web application is a Recipe Book web app built with ReactJs. It allows users to explore a collection of recipes fetched from an external API.
 
 ## Features
 
